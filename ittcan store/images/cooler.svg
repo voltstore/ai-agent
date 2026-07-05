@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="مبرد معالج">
+  <!-- Placeholder product art — replace with a real cooler photo later -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a1d11"/><stop offset="1" stop-color="#43301b"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <g stroke="#45321e" stroke-width="1">
+    <path d="M0 75h400M0 150h400M0 225h400M100 0v300M200 0v300M300 0v300"/>
+  </g>
+  <!-- heatsink fin stack -->
+  <g stroke="#8d7a61" stroke-width="3" stroke-linecap="round">
+    <path d="M148 70h104M148 86h104M148 102h104M148 118h104M148 134h104M148 150h104"/>
+  </g>
+  <!-- heat pipes -->
+  <path d="M168 70v96c0 22 14 34 32 34s32-12 32-34V70" fill="none" stroke="#fb923c" stroke-width="3.5"/>
+  <!-- fan -->
+  <circle cx="200" cy="205" r="34" fill="#332413" stroke="#fb923c" stroke-width="2.5"/>
+  <g stroke="#fb923c" stroke-width="1.8" opacity="0.65">
+    <path d="M200 177v16M200 217v16M172 205h16M212 205h16M181 186l11 11M208 213l11 11M219 186l-11 11M192 213l-11 11"/>
+  </g>
+  <circle cx="200" cy="205" r="8" fill="#fb923c"/>
+  <!-- airflow hints -->
+  <g stroke="#8d7a61" stroke-width="2" stroke-linecap="round" opacity="0.7">
+    <path d="M96 190h28M88 205h36M96 220h28M276 190h28M276 205h36M276 220h28"/>
+  </g>
+  <text x="200" y="282" font-family="Segoe UI, sans-serif" font-size="15" letter-spacing="6" fill="#8d7a61" text-anchor="middle">COOLING</text>
+</svg>

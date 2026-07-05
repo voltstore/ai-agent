@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>لوحة إدارة المخزون — اتقان</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23090c12'/%3E%3Cpath d='M9 23V9h4v14zm7-14h7v4h-7zm0 10h7v4h-7z' fill='%235bd992'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Follow the same theme the store uses (warm white default).
+    document.documentElement.dataset.theme =
+      localStorage.getItem('itqan-theme') === 'dark' ? 'dark' : 'light';
+  </script>
+  <style>
+    /* ------------------------- admin-only styles (on top of style.css) */
+    .admin-top {
+      position: sticky; top: 0; z-index: 100;
+      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .admin-top__inner { display: flex; align-items: center; gap: 12px; min-height: 70px; flex-wrap: wrap; padding-block: 10px; }
+    .admin-top__title { font-weight: 700; font-size: 1.1rem; }
+    .admin-top__title code { display: block; font-size: 0.6rem; letter-spacing: 0.2em; color: var(--text-2); }
+    .admin-top__actions { margin-inline-start: auto; display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .conn-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--danger); }
+    .is-connected .conn-dot { background: var(--success); }
+
+    .admin-note {
+      margin-block: 22px 0; padding: 14px 18px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-inline-start: 3px solid var(--accent);
+      border-radius: var(--radius-m); font-size: 0.88rem; color: var(--text-2);
+    }
+    .admin-note b { color: var(--text); }
+
+    .admin-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-block: 22px; }
+    .admin-tab {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 16px; border-radius: 999px;
+      background: var(--surface); border: 1px solid var(--border);
+      font-size: 0.88rem; font-weight: 600;
+      transition: border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+    }
+    .admin-tab:hover { border-color: var(--accent-line); }
+    .admin-tab.is-active { background: var(--accent-soft); border-color: var(--accent); color: var(--text); }
+    .admin-tab b {
+      font-family: var(--mono); font-size: 0.68rem; font-weight: 500;
+      background: var(--surface-2); border-radius: 999px; padding: 2px 8px; color: var(--text-2);
+    }
+
+    .admin-head-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .admin-head-row h2 { font-size: 1.3rem; font-weight: 700; margin-inline-end: auto; }
+
+    .admin-list { display: grid; gap: 10px; padding-bottom: 80px; }
+    .admin-row {
+      display: grid; grid-template-columns: 64px minmax(0,1fr) auto auto; gap: 14px; align-items: center;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-m);
+      padding: 10px 14px;
+    }
+    .admin-row img {
+      width: 64px; height: 48px; object-fit: cover; border-radius: 8px;
+      background: linear-gradient(160deg, #2a1d11, #43301b); border: 1px solid var(--border);
+    }
+    .admin-row__info { display: grid; gap: 2px; min-width: 0; }
+    .admin-row__name { font-weight: 600; font-size: 0.93rem; }
+    .admin-row__specs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .admin-row__price { font-weight: 700; color: var(--accent); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .admin-row__actions { display: flex; gap: 6px; }
+    .row-btn {
+      width: 36px; height: 36px; display: grid; place-items: center;
+      border: 1px solid var(--border); border-radius: var(--radius-s); background: var(--surface-2);
+      color: var(--text-2); transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+    }
+    .row-btn:hover { color: var(--accent); border-color: var(--accent-line); }
+    .row-btn--del:hover { color: var(--danger); border-color: var(--danger); }
+    .admin-empty { text-align: center; color: var(--text-2); padding: 40px; }
+
+    /* dialog form */
+    dialog.part-dialog {
+      width: min(560px, calc(100vw - 32px));
+      background: var(--bg-raised); color: var(--text);
+      border: 1px solid var(--border-strong); border-radius: var(--radius-l);
+      padding: 0; box-shadow: var(--shadow-2);
+    }
+    dialog.part-dialog::backdrop { background: rgba(5,7,11,.6); backdrop-filter: blur(3px); }
+    .pd-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .pd-head h3 { font-size: 1.05rem; font-weight: 700; }
+    .pd-body { padding: 18px 20px; display: grid; gap: 14px; max-height: 65vh; overflow-y: auto; }
+    .pd-foot { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+
+    .field { display: grid; gap: 6px; }
+    .field label { font-size: 0.8rem; font-weight: 600; color: var(--text-2); }
+    .field input[type=text], .field input[type=number], .field select, .field textarea {
+      min-height: 44px; padding: 10px 13px; font: inherit; font-size: 0.9rem;
+      background: var(--surface); color: var(--text);
+      border: 1px solid var(--border-strong); border-radius: var(--radius-m);
+    }
+    .field textarea { min-height: 60px; resize: vertical; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .field-check { display: flex; align-items: center; gap: 10px; font-size: 0.88rem; min-height: 44px; }
+    .field-check input { width: 18px; height: 18px; accent-color: var(--accent); }
+    .checks { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .img-drop {
+      display: flex; align-items: center; gap: 14px;
+      border: 1.5px dashed var(--border-strong); border-radius: var(--radius-m);
+      padding: 12px; cursor: pointer;
+      transition: border-color var(--dur-fast) var(--ease);
+    }
+    .img-drop:hover { border-color: var(--accent-line); }
+    .img-drop img { width: 84px; height: 63px; object-fit: cover; border-radius: 8px; background: #2a1d11; }
+    .img-drop span { font-size: 0.82rem; color: var(--text-2); }
+    .img-drop input { display: none; }
+
+    /* dashboard stats */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-block: 22px 6px; }
+    .stat {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-l);
+      box-shadow: var(--card-edge); padding: 16px 18px; display: grid; gap: 2px;
+    }
+    .stat b { font-size: 1.5rem; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+    .stat span { font-size: 0.78rem; color: var(--text-2); }
+    .stat code { font-size: 0.58rem; letter-spacing: 0.16em; color: var(--text-2); opacity: 0.6; }
+
+    /* search */
+    .admin-search { position: relative; flex: 1; min-width: 200px; max-width: 380px; }
+    .admin-search input {
+      width: 100%; min-height: 44px; padding: 10px 40px 10px 14px; font: inherit; font-size: 0.9rem;
+      background: var(--surface); color: var(--text);
+      border: 1px solid var(--border-strong); border-radius: 999px;
+    }
+    .admin-search svg { position: absolute; top: 50%; inset-inline-start: 14px; transform: translateY(-50%); color: var(--text-2); pointer-events: none; }
+    .admin-search input { padding-inline-start: 40px; padding-inline-end: 14px; }
+
+    /* per-row extras */
+    .admin-row__id { font-family: var(--mono); font-size: 0.62rem; color: var(--text-2); opacity: 0.75; direction: ltr; text-align: end; }
+    .admin-row__blurb { font-size: 0.76rem; color: var(--text-2); font-weight: 300; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .badge-img { font-size: 0.64rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+    .badge-img[data-ok='1'] { background: var(--success-soft); color: var(--success); }
+    .badge-img[data-ok='0'] { background: var(--warning-soft); color: var(--warning); }
+    .badge-cat { font-size: 0.64rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+
+    /* store settings card */
+    .settings-card {
+      margin-block: 26px 0; padding: 18px 20px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-l);
+      box-shadow: var(--card-edge);
+      display: grid; gap: 12px;
+    }
+    .settings-card h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    .settings-card h2 code { font-size: 0.58rem; letter-spacing: 0.16em; color: var(--text-2); opacity: 0.6; }
+    .settings-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; }
+    .settings-row .field { flex: 1; min-width: 220px; }
+    .settings-hint { font-size: 0.78rem; color: var(--text-2); }
+
+    @media (max-width: 640px) {
+      .admin-row { grid-template-columns: 48px minmax(0,1fr) auto; }
+      .admin-row__price { grid-column: 2; justify-self: start; }
+      .field-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ======================================================== top bar -->
+  <header class="admin-top">
+    <div class="container admin-top__inner">
+      <p class="admin-top__title">لوحة إدارة المخزون<code>ITQAN.ADMIN — LOCAL ONLY</code></p>
+      <div class="admin-top__actions">
+        <button type="button" id="connectBtn" class="btn btn--ghost btn--small">
+          <span class="conn-dot" aria-hidden="true"></span>
+          <span id="connectLabel">اربط مجلد المشروع</span>
+        </button>
+        <button type="button" id="exportBtn2" class="btn btn--ghost btn--small">تنزيل inventory.js</button>
+        <a class="btn btn--primary btn--small" href="index.html">فتح المتجر ←</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <p class="admin-note" id="adminNote">
+      <b>خطوة واحدة فقط:</b> اضغط «اربط مجلد المشروع» واختر مجلد <b dir="ltr">ittcan store</b> —
+      بعدها كل إضافة أو تعديل يُحفظ مباشرة في ملفات الموقع، والصور تُنسخ تلقائيًا إلى مجلد
+      <b dir="ltr">images/</b> بالاسم الصحيح. (لو ما ربطت المجلد، تقدر تنزّل
+      <b dir="ltr">inventory.js</b> يدويًا وتستبدله.)
+    </p>
+
+    <!-- dashboard stats -->
+    <div class="stats" id="statsRow"></div>
+
+    <!-- store settings -->
+    <section class="settings-card" aria-labelledby="settingsTitle">
+      <h2 id="settingsTitle">إعدادات المتجر <code>SETTINGS</code></h2>
+      <div class="settings-row">
+        <div class="field">
+          <label for="setWhatsapp">رقم واتساب المتجر (دولي بدون +)</label>
+          <input type="text" id="setWhatsapp" dir="ltr" placeholder="966512345678" inputmode="numeric">
+        </div>
+        <button type="button" id="saveSettingsBtn" class="btn btn--primary btn--small">حفظ الإعدادات</button>
+      </div>
+      <p class="settings-hint">هذا الرقم هو الذي تصله طلبات «تصدير التجميعة» من الزبائن.</p>
+    </section>
+
+    <div class="admin-tabs" id="adminTabs" role="tablist"></div>
+
+    <div class="admin-head-row">
+      <h2 id="catTitle">المعالج</h2>
+      <div class="admin-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <label class="sr-only" for="searchInput">بحث في كل القطع</label>
+        <input type="search" id="searchInput" placeholder="ابحث في كل القطع بالاسم...">
+      </div>
+      <button type="button" id="addBtn" class="btn btn--primary">＋ إضافة قطعة</button>
+    </div>
+
+    <ul class="admin-list" id="adminList"></ul>
+  </main>
+
+  <!-- ======================================================= part form -->
+  <dialog class="part-dialog" id="partDialog">
+    <form id="partForm" method="dialog" novalidate>
+      <div class="pd-head">
+        <h3 id="pdTitle">إضافة قطعة</h3>
+        <button type="button" class="row-btn" id="pdClose" aria-label="إغلاق">✕</button>
+      </div>
+      <div class="pd-body">
+        <div class="field">
+          <label for="fName">اسم القطعة (كما هو تجاريًا) *</label>
+          <input type="text" id="fName" required placeholder="AMD Ryzen 7 9700X">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="fPrice">السعر (ر.س) *</label>
+            <input type="number" id="fPrice" min="1" required placeholder="1299">
+          </div>
+          <div class="field" id="dynFieldsSlot1"></div>
+        </div>
+        <div id="dynFields"></div>
+        <div class="field">
+          <label>صورة المنتج (اختياري)</label>
+          <label class="img-drop" id="imgDrop">
+            <img id="imgPreview" alt="" src="images/cpu.svg">
+            <span id="imgHint">اضغط لاختيار صورة من جهازك — تُنسخ تلقائيًا لمجلد الصور</span>
+            <input type="file" id="fImage" accept="image/*">
+          </label>
+        </div>
+        <div class="field">
+          <label for="fBlurbAr">وصف قصير (عربي، اختياري)</label>
+          <textarea id="fBlurbAr" placeholder="أداء ممتاز لفئة..."></textarea>
+        </div>
+        <div class="field">
+          <label for="fBlurbEn">وصف قصير (إنجليزي، اختياري)</label>
+          <textarea id="fBlurbEn" dir="ltr" placeholder="Great value for..."></textarea>
+        </div>
+      </div>
+      <div class="pd-foot">
+        <button type="button" class="btn btn--ghost" id="pdCancel">إلغاء</button>
+        <button type="submit" class="btn btn--primary" id="pdSave">حفظ القطعة</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="settings.js"></script>
+  <script src="inventory.js"></script>
+  <script src="data.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

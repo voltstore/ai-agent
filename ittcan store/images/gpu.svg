@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="كرت شاشة">
+  <!-- Placeholder product art — replace with a real GPU photo later -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a1d11"/><stop offset="1" stop-color="#43301b"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <g stroke="#45321e" stroke-width="1">
+    <path d="M0 75h400M0 150h400M0 225h400M100 0v300M200 0v300M300 0v300"/>
+  </g>
+  <!-- shroud -->
+  <rect x="60" y="102" width="280" height="86" rx="12" fill="#332413" stroke="#8d7a61" stroke-width="2"/>
+  <!-- fans -->
+  <circle cx="140" cy="145" r="30" fill="none" stroke="#fb923c" stroke-width="2.5"/>
+  <circle cx="260" cy="145" r="30" fill="none" stroke="#fb923c" stroke-width="2.5"/>
+  <g stroke="#fb923c" stroke-width="1.6" opacity="0.6">
+    <path d="M140 121v13M140 156v13M116 145h13M151 145h13M123 128l9 9M148 153l9 9M157 128l-9 9M132 153l-9 9"/>
+    <path d="M260 121v13M260 156v13M236 145h13M271 145h13M243 128l9 9M268 153l9 9M277 128l-9 9M252 153l-9 9"/>
+  </g>
+  <circle cx="140" cy="145" r="7" fill="#fb923c"/>
+  <circle cx="260" cy="145" r="7" fill="#fb923c"/>
+  <!-- pcie + bracket -->
+  <path d="M92 188v14h150v-14" fill="none" stroke="#8d7a61" stroke-width="3"/>
+  <path d="M60 118h-14v56h14" fill="none" stroke="#8d7a61" stroke-width="3"/>
+  <rect x="60" y="88" width="200" height="8" rx="4" fill="#fb923c" opacity="0.85"/>
+  <text x="200" y="266" font-family="Segoe UI, sans-serif" font-size="15" letter-spacing="6" fill="#8d7a61" text-anchor="middle">GRAPHICS</text>
+</svg>

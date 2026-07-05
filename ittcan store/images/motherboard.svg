@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="لوحة أم">
+  <!-- Placeholder product art — replace with a real motherboard photo later -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a1d11"/><stop offset="1" stop-color="#43301b"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <g stroke="#45321e" stroke-width="1">
+    <path d="M0 75h400M0 150h400M0 225h400M100 0v300M200 0v300M300 0v300"/>
+  </g>
+  <!-- board -->
+  <rect x="90" y="48" width="220" height="204" rx="10" fill="#332413" stroke="#8d7a61" stroke-width="2"/>
+  <!-- socket -->
+  <rect x="130" y="78" width="76" height="76" rx="6" fill="none" stroke="#fb923c" stroke-width="2.5"/>
+  <rect x="148" y="96" width="40" height="40" rx="3" fill="#fb923c" opacity="0.28"/>
+  <!-- ram slots -->
+  <g stroke="#fb923c" stroke-width="4" stroke-linecap="round">
+    <path d="M238 76v84M254 76v84M270 76v84"/>
+  </g>
+  <!-- pcie slots -->
+  <g stroke="#8d7a61" stroke-width="5" stroke-linecap="round">
+    <path d="M122 190h130M122 214h80"/>
+  </g>
+  <!-- chipset + traces -->
+  <rect x="252" y="196" width="34" height="34" rx="5" fill="none" stroke="#8d7a61" stroke-width="2"/>
+  <path d="M206 116h20M216 116v60M216 176h30" fill="none" stroke="#fb923c" stroke-width="1.4" opacity="0.5"/>
+  <circle cx="106" cy="64" r="4" fill="#fb923c"/>
+  <circle cx="294" cy="236" r="4" fill="#fb923c"/>
+  <text x="200" y="282" font-family="Segoe UI, sans-serif" font-size="15" letter-spacing="6" fill="#8d7a61" text-anchor="middle">MAINBOARD</text>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="معالج">
+  <!-- Placeholder product art — replace with a real CPU photo later -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a1d11"/><stop offset="1" stop-color="#43301b"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <g stroke="#45321e" stroke-width="1">
+    <path d="M0 75h400M0 150h400M0 225h400M100 0v300M200 0v300M300 0v300"/>
+  </g>
+  <!-- pins -->
+  <g stroke="#8d7a61" stroke-width="3" stroke-linecap="round">
+    <path d="M140 88v-20M170 88v-20M200 88v-20M230 88v-20M260 88v-20"/>
+    <path d="M140 212v20M170 212v20M200 212v20M230 212v20M260 212v20"/>
+    <path d="M128 100h-20M128 130h-20M128 170h-20M128 200h-20"/>
+    <path d="M272 100h20M272 130h20M272 170h20M272 200h20"/>
+  </g>
+  <!-- package -->
+  <rect x="128" y="88" width="144" height="124" rx="10" fill="#332413" stroke="#8d7a61" stroke-width="2"/>
+  <!-- die -->
+  <rect x="158" y="114" width="84" height="72" rx="6" fill="#3f2d18" stroke="#fb923c" stroke-width="2.5"/>
+  <path d="M158 138h84M158 162h84M186 114v72M214 114v72" stroke="#fb923c" stroke-width="1" opacity="0.45"/>
+  <circle cx="140" cy="100" r="4" fill="#fb923c"/>
+  <text x="200" y="266" font-family="Segoe UI, sans-serif" font-size="15" letter-spacing="6" fill="#8d7a61" text-anchor="middle">PROCESSOR</text>
+</svg>
